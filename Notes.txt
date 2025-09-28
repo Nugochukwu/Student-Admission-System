@@ -1,0 +1,23 @@
+﻿Key Objectives
+-	-
+Simplify the student registration process.
+Provide real-time admission status checking.
+Enable efficient application management for administrators.
+Maintain accurate student records with full CRUD capabilities.
+
+Students
+-	-
+1. Student Registration
+2.Admission Status check
+
+Admin
+-	-
+1. Secure Login/Authentication
+2.Student/Application Management
+
+TECH STACK
+-	-
+Framework: ASP.NET Core MVC (C#)
+Database: SQL Server (with Entity Framework)
+Frontend: HTML5, CSS3, JavaScript, Bootstrap
+Authentication: ASP.NET Core Identity (or custom authentication)
