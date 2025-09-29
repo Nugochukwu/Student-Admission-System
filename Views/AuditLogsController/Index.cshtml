@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Student_Admission_System.Models.AuditLog>
+
+@{
+    ViewData["Title"] = "Audit Logs";
+}
+
+<h2>Audit Logs</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Timestamp</th>
+            <th>Admin</th>
+            <th>Student</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var log in Model)
+        {
+            <tr>
+                <td>@log.Timestamp</td>
+                <td>@log.Admin?.UserName</td>
+                <td>@log.Student?.FirstName @log.Student?.LastName</td>
+                <td>@log.Action</td>
+            </tr>
+        }
+    </tbody>
+</table>

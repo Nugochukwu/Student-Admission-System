@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Student_Admission_System.Models.Student>
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<h2>Admin Dashboard</h2>
+
+<form method="get" asp-action="Dashboard" class="row g-2">
+    <div class="col-md-4">
+        <input type="text" name="search" value="@Context.Request.Query["search"]" 
+               placeholder="Search by name or application #" class="form-control" />
+    </div>
+    <div class="col-md-3">
+        <select name="statusId" class="form-control">
+            <option value="">All Statuses</option>
+            @foreach (var s in ViewBag.Statuses)
+            {
+                    <option value="@s.AdmissionStatusID"
+                        selected="@(Context.Request.Query["statusId"] == s.AdmissionStatusID.ToString())">
+                    @s.Name
+                    </option>
+            }
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </div>
+</form>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Application #</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Updated</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var s in Model)
+        {
+            <tr>
+                <td>@s.ApplicationNumber</td>
+                <td>@s.FirstName @s.LastName</td>
+                <td>@s.Email</td>
+                <td>@s.AdmissionStatus?.Name</td>
+                <td>@s.LastUpdated.ToString("g")</td>
+                <td>
+                    <a asp-action="EditStatus" asp-route-id="@s.StudentID" class="btn btn-sm btn-warning">Edit Status</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

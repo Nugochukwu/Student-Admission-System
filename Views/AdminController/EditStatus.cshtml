@@ -1,0 +1,31 @@
+﻿@model Student_Admission_System.Models.Student
+@{
+    ViewData["Title"] = "Edit Student Status";
+}
+
+<h2>Edit Admission Status</h2>
+
+<form asp-action="EditStatus" method="post">
+    <input type="hidden" name="id" value="@Model.StudentID" />
+
+    <div class="form-group">
+        <label>Student</label>
+        <p>@Model.FirstName @Model.LastName (@Model.ApplicationNumber)</p>
+    </div>
+
+    <div class="form-group">
+        <label>New Status</label>
+        <select name="newStatusId" class="form-control">
+            @foreach (var status in ViewBag.Statuses)
+            {
+                    <option value="@status.AdmissionStatusID" 
+                        selected="@(Model.AdmissionStatusID == status.AdmissionStatusID)">
+                    @status.Name
+                    </option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success mt-2">Save</button>
+    <a asp-action="Dashboard" class="btn btn-secondary mt-2">Cancel</a>
+</form>

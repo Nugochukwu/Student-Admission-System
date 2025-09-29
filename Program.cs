@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-
-using Student_Admission_System.Models;
+using Student_Admission_System.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,13 +9,13 @@ builder.Services.AddControllersWithViews();
 
 
 // Register EF Core + SQL Server Dependency Injection
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
+builder.Services.AddDbContext<ApplicationDbContext2>(options => options.UseSqlServer(
 	builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 	options.SignIn.RequireConfirmedAccount = false) // if email confirmation
-	.AddEntityFrameworkStores<ApplicationDbContext>();
+	.AddEntityFrameworkStores<ApplicationDbContext2>();
 
 
 // MVC + API support
@@ -43,10 +42,13 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllerRoute(
-	name: "default",
-	pattern: "{controller=Product}/{action=Index}/{id?}");
 
+
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 
 //Identity Ui
 app.MapRazorPages();
