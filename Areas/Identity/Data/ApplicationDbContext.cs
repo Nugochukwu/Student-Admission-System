@@ -36,6 +36,37 @@ namespace Student_Admission_System.Areas.Identity.Data
                 .HasOne(a => a.Admin)
                 .WithMany()
                 .HasForeignKey(a => a.AdminID);
+
+            modelBuilder.Entity<Student>()
+                .HasIndex(s => s.ApplicationNumber)
+                .IsUnique();
+            modelBuilder.Entity<Student>()
+                .HasIndex(s => s.Email)
+                .IsUnique();
+            modelBuilder.Entity<AuditLog>()
+                .HasOne(a => a.Student)
+                .WithMany()
+                .HasForeignKey(a => a.StudentID)
+                .OnDelete(DeleteBehavior.Cascade);  // logs go if student goes
+
+            modelBuilder.Entity<AdmissionStatus>().HasData
+                (
+                    new AdmissionStatus { AdmissionStatusID = 1, Name = "PENDING"},
+                    new AdmissionStatus { AdmissionStatusID = 2, Name = "ACCEPTED" },
+                    new AdmissionStatus { AdmissionStatusID = 3, Name = "REJECTED" }
+                );
         }
+        public override int SaveChanges()
+        {
+            foreach (var entry in ChangeTracker.Entries<Student>())
+            {
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Entity.LastUpdated = DateTime.UtcNow;
+                }
+            }
+            return base.SaveChanges();
+        }
+
     }
 }

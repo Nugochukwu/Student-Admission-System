@@ -1,0 +1,18 @@
+﻿@model Student_Admission_System.Models.Student
+
+@{
+    ViewData["Title"] = "Edit Student";
+}
+
+<div class="alert alert-success mt-4">
+    <h2> Registration Complete!</h2>
+    <p>Your Application has been submitted successfully.</p>
+    <p><strong>Your Application Number is: </strong></p>
+    <h3 class="text-primary">@ViewBag.ApplicationNumber</h3>
+</div>
+
+<a asp-controller="Students" asp-action="CheckStatus" class="btn btn-info mt-3">
+    Check Your Admission Status
+</a>
+
+

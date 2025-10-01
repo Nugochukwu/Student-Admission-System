@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Student_Admission_System.Areas.Identity.Data;
 
 #nullable disable
 
-namespace StudentAdmissionSystem.Migrations
+namespace Student_Admission_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext2))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251001022909_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,10 +170,12 @@ namespace StudentAdmissionSystem.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -207,10 +212,12 @@ namespace StudentAdmissionSystem.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -235,6 +242,23 @@ namespace StudentAdmissionSystem.Migrations
                     b.HasKey("AdmissionStatusID");
 
                     b.ToTable("AdmissionStatuses");
+
+                    b.HasData(
+                        new
+                        {
+                            AdmissionStatusID = 1,
+                            Name = "PENDING"
+                        },
+                        new
+                        {
+                            AdmissionStatusID = 2,
+                            Name = "ACCEPTED"
+                        },
+                        new
+                        {
+                            AdmissionStatusID = 3,
+                            Name = "REJECTED"
+                        });
                 });
 
             modelBuilder.Entity("Student_Admission_System.Models.AuditLog", b =>
@@ -290,28 +314,32 @@ namespace StudentAdmissionSystem.Migrations
 
                     b.Property<string>("ApplicationNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("HighSchoolName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal?>("HighSchoolScore")
+                        .IsRequired()
                         .HasColumnType("decimal(5,2)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<DateTime>("LastUpdated")
                         .HasColumnType("datetime2");
@@ -325,6 +353,12 @@ namespace StudentAdmissionSystem.Migrations
                     b.HasKey("StudentID");
 
                     b.HasIndex("AdmissionStatusID");
+
+                    b.HasIndex("ApplicationNumber")
+                        .IsUnique();
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Students");
                 });

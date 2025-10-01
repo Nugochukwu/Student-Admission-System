@@ -1,45 +1,30 @@
 ﻿@model IEnumerable<Student_Admission_System.Models.Student>
 
-<h1>Students</h1>
-
-<form method="get" asp-action="Index">
-    <p>
-        Filter by Admission Status:
-        <input type="text" name="searchStatus" value="@ViewData["CurrentFilter"]" />
-        <input type="submit" value="Search" class="btn btn-primary" />
-    </p>
-</form>
+<h1>Students Board</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-success">Apply</a>
+    <!--<a asp-action="Create" class="btn btn-success">Apply</a>-->
+    <ui class="nav-item">
+        <a class="btn btn-success text-white" asp-area="" asp-controller="Students" asp-action="Register">Register</a>
+    </ui>
 </p>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.First().FirstName)</th>
-            <th>@Html.DisplayNameFor(model => model.First().LastName)</th>
-            <th>@Html.DisplayNameFor(model => model.First().Email)</th>
-            <th>@Html.DisplayNameFor(model => model.First().HighSchoolScore)</th>
-            <th>@Html.DisplayNameFor(model => model.First().AdmissionStatus.Name)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-                <tr>
-                    <td>@item.FirstName</td>
-                    <td>@item.LastName</td>
-                    <td>@item.Email</td>
-                    <td>@item.HighSchoolScore</td>
-                    <td>@item.AdmissionStatus?.Name</td>
-                    <td>
-                            <a asp-action="Edit" asp-route-id="@item.StudentID">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.StudentID">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.StudentID">Delete</a>
-                    </td>
-                </tr>
-        }
-    </tbody>
-</table>
+
+<h2>Check Your Admission Status</h2>
+
+<form asp-action="CheckStatus" method="post">
+    <div class="form-group">
+        <label for="applicationNumber">Application Number</label>
+        <input type="text" name="applicationNumber" class="form-control" required />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Check Status</button>
+</form>
+
+@if (ViewBag.Message != null)
+{
+            <div class="alert alert-info mt-3">
+        @ViewBag.Message
+            </div>
+}
+

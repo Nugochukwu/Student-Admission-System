@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Student_Admission_System.Areas.Identity.Data;
 using Student_Admission_System.Models;
 
@@ -26,6 +27,7 @@ namespace Student_Admission_System.Controllers
         // GET: Registration Form
         public IActionResult Register()
 		{
+			
 			return View();
 		}
 
@@ -34,22 +36,37 @@ namespace Student_Admission_System.Controllers
 		[ValidateAntiForgeryToken]
 		public IActionResult Register(Student student)
 		{
-			if (ModelState.IsValid)
+			
+            Console.WriteLine("POST Register called"); // debug
+            
+
+			var pendingStatus = _context.AdmissionStatuses.FirstOrDefault(s => s.Name == "PENDING");
+			if (pendingStatus != null)
 			{
-				// Generate unique Application Number (year + random)
-				student.ApplicationNumber = $"{DateTime.Now.Year}-{Guid.NewGuid().ToString().Substring(0, 6).ToUpper()}";
-				student.RegistrationDate = DateTime.Now;
-				student.LastUpdated = DateTime.Now;
-
-				// Default status = PENDING
-				var pendingStatus = _context.AdmissionStatuses.FirstOrDefault(s => s.Name == "PENDING");
+				
 				student.AdmissionStatusID = pendingStatus.AdmissionStatusID;
+			}
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine($"Validation error: {error.ErrorMessage}");
+            }
+            // Generate unique Application Number (year + random)
+            student.ApplicationNumber = $"{DateTime.Now.Year}-{Guid.NewGuid().ToString().Substring(0, 6).ToUpper()}";
+			student.RegistrationDate = DateTime.Now;
+            student.LastUpdated = DateTime.Now;
 
+            if (ModelState.IsValid)
+			{
+				
 				_context.Students.Add(student);
 				_context.SaveChanges();
 
 				ViewBag.ApplicationNumber = student.ApplicationNumber;
-				return View("RegistrationSuccess");
+                Console.WriteLine("POST Register Succeeded");
+                return View("RegistrationSuccess");
+				
+
+
 			}
 
 			return View(student);
@@ -66,33 +83,35 @@ namespace Student_Admission_System.Controllers
 		public IActionResult CheckStatus(string applicationNumber)
 		{
 			var student = _context.Students
-				.Where(s => s.ApplicationNumber == applicationNumber)
-				.Select(s => new { s.FirstName, s.LastName, Status = s.AdmissionStatus.Name })
+                .Include(s => s.AdmissionStatus)
+                .Where(s => s.ApplicationNumber == applicationNumber)
 				.FirstOrDefault();
-
+			Console.WriteLine("Check Status is being Hit");
 			if (student == null)
 			{
 				ViewBag.Message = "Invalid Application Number!";
 				return View();
 			}
 
-			switch (student.Status.ToUpper())
-			{
-				case "PENDING":
-					ViewBag.Message = "Your application is under review. Please check back later.";
-					break;
-				case "ACCEPTED":
-					ViewBag.Message = "Congratulations! Your application has been accepted.";
-					break;
-				case "REJECTED":
-					ViewBag.Message = "We regret to inform you that your application was not successful.";
-					break;
-				default:
-					ViewBag.Message = "Unknown status.";
-					break;
-			}
+            switch (student.AdmissionStatus.Name.ToUpper())
+            {
+                case "PENDING":
+                    ViewBag.Message = "Your application is under review. Please check back later.";
+                    break;
+                case "ACCEPTED":
+                    ViewBag.Message = "Congratulations! Your application has been accepted.";
+                    break;
+                case "REJECTED":
+                    ViewBag.Message = "We regret to inform you that your application was not successful.";
+                    break;
+                default:
+                    ViewBag.Message = "Unknown status.";
+                    break;
+            }
 
-			return View();
+            return View();
 		}
 	}
 }
+
+//validation for duplicate emails

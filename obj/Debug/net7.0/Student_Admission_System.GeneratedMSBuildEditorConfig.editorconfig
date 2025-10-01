@@ -236,24 +236,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcQ2hlY2tTdGF0dXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/Ugochukwu Nwodo/Documents/My_Actual_Docs/Projects/Programming/C\#/C\#_Practice/Student_Admission_System/Views/Students/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Ugochukwu Nwodo/Documents/My_Actual_Docs/Projects/Programming/C\#/C\#_Practice/Student_Admission_System/Views/Students/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Ugochukwu Nwodo/Documents/My_Actual_Docs/Projects/Programming/C\#/C\#_Practice/Student_Admission_System/Views/Students/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Ugochukwu Nwodo/Documents/My_Actual_Docs/Projects/Programming/C\#/C\#_Practice/Student_Admission_System/Views/Students/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [C:/Users/Ugochukwu Nwodo/Documents/My_Actual_Docs/Projects/Programming/C\#/C\#_Practice/Student_Admission_System/Views/Students/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ugochukwu Nwodo/Documents/My_Actual_Docs/Projects/Programming/C\#/C\#_Practice/Student_Admission_System/Views/Students/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcUmVnaXN0ZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Ugochukwu Nwodo/Documents/My_Actual_Docs/Projects/Programming/C\#/C\#_Practice/Student_Admission_System/Views/Students/RegistrationSuccess.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R1ZGVudHNcUmVnaXN0cmF0aW9uU3VjY2Vzcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Ugochukwu Nwodo/Documents/My_Actual_Docs/Projects/Programming/C\#/C\#_Practice/Student_Admission_System/Views/_ViewImports.cshtml]

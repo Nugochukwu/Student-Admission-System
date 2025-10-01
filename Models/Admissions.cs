@@ -5,25 +5,33 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Student_Admission_System.Models
 {
+
 	public class Student
 	{
 		public int StudentID { get; set; }
-		public string ApplicationNumber { get; set; } = "";
-		public string FirstName { get; set; } = "";
-		public string LastName { get; set; } = "";
-		public DateTime DateOfBirth { get; set; }
-		public string Email { get; set; } = "";
-		public string? PhoneNumber { get; set; }
-		public string? Address { get; set; }
+        [StringLength(20)]
+        public string ApplicationNumber { get; set; } = "";
+
+        [Required, StringLength(50)]
+        public string FirstName { get; set; } = "";
+        [Required, StringLength(50)]
+        public string LastName { get; set; } = "";
+        public DateTime DateOfBirth { get; set; }
+        [Required, EmailAddress]
+        public string Email { get; set; } = "";
+        [Phone]
+        public string? PhoneNumber { get; set; }
+        public string? Address { get; set; }
 		public string? HighSchoolName { get; set; }
-		[Column(TypeName = "decimal(5,2)")]
+		[Required,Column(TypeName = "decimal(5,2)")]
 		public decimal? HighSchoolScore { get; set; }
-		public DateTime RegistrationDate { get; set; }
-		public DateTime LastUpdated { get; set; }
+		public DateTime RegistrationDate { get; set; } = DateTime.UtcNow;
+        public DateTime LastUpdated { get; set; }
 
 		//Foreign Key
 		public int AdmissionStatusID { get; set; }
-		public AdmissionStatus AdmissionStatus { get; set; } = null!;
+		
+		public AdmissionStatus? AdmissionStatus { get; set; } = null!;
 	}
 	public class AdmissionStatus
 	{ 

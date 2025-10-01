@@ -1,31 +1,21 @@
-﻿@model Student_Admission_System.Models.Student
-
-@{
-    ViewData["Title"] = "Check Admission Status";
+﻿@{
+    ViewData["Title"] = "Check Application Status";
 }
 
-<h2>Check Admission Status</h2>
+<h2>Check Your Admission Status</h2>
 
-<form method="post" asp-action="CheckStatus">
+<form asp-action="CheckStatus" method="post">
     <div class="form-group">
         <label for="applicationNumber">Application Number</label>
         <input type="text" name="applicationNumber" class="form-control" required />
     </div>
-    <button type="submit" class="btn btn-primary mt-2">Check Status</button>
+
+    <button type="submit" class="btn btn-primary">Check Status</button>
 </form>
 
-@if (ViewBag.ErrorMessage != null)
-{
-        <div class="alert alert-danger mt-3">@ViewBag.ErrorMessage</div>
-}
-
-@if (Model != null)
+@if (ViewBag.Message != null)
 {
         <div class="alert alert-info mt-3">
-            <h4>@Model.FirstName @Model.LastName</h4>
-            <p>Email: @Model.Email</p>
-            <p>Admission Status: 
-                <strong>@Model.AdmissionStatus?.Name</strong>
-            </p>
+        @ViewBag.Message
         </div>
 }
