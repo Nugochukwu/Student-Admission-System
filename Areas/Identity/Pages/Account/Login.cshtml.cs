@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
@@ -15,16 +15,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
+using Microsoft.AspNetCore.Identity;  // Make sure this is at the top
+
+
 namespace Student_Admission_System.Areas.Identity.Pages.Account
 {
     public class LoginModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;  // ✅ add this
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager,UserManager<IdentityUser> userManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            _userManager = userManager;
             _logger = logger;
         }
 
@@ -115,7 +120,27 @@ namespace Student_Admission_System.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    //return LocalRedirect(returnUrl);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("User logged in.");
+
+                        var user = await _userManager.FindByEmailAsync(Input.Email);
+                        var roles = await _userManager.GetRolesAsync(user);
+
+                        if (roles.Contains("Admin"))
+                        {
+                            return RedirectToAction("Index", "Admin"); // 👈 go to Admin dashboard controller
+                        }
+                        else if (roles.Contains("Student"))
+                        {
+                            return RedirectToAction("CheckStatus", "Students"); // 👈 go to Student status page
+                        }
+
+                        // Default fallback
+                        return LocalRedirect(returnUrl);
+                    }
+
                 }
                 if (result.RequiresTwoFactor)
                 {

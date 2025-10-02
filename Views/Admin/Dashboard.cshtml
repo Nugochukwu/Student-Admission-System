@@ -25,6 +25,11 @@
     <div class="col-md-2">
         <button type="submit" class="btn btn-primary">Filter</button>
     </div>
+    <div class="col-md-2">
+        <ul class="nav-item">
+        <a class="btn btn-success text-white" asp-area="" asp-controller="Admin" asp-action="AuditLogs">Logs</a>
+        </ul>
+    </div>
 </form>
 
 <table class="table table-striped mt-3">
@@ -39,18 +44,23 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var s in Model)
+        @foreach (var student in Model)
         {
-            <tr>
-                <td>@s.ApplicationNumber</td>
-                <td>@s.FirstName @s.LastName</td>
-                <td>@s.Email</td>
-                <td>@s.AdmissionStatus?.Name</td>
-                <td>@s.LastUpdated.ToString("g")</td>
-                <td>
-                    <a asp-action="EditStatus" asp-route-id="@s.StudentID" class="btn btn-sm btn-warning">Edit Status</a>
-                </td>
-            </tr>
+                <tr>
+                    <td>@student.ApplicationNumber</td>
+                    <td>@student.FirstName @student.LastName</td>
+                    <td>@student.Email</td>
+                    <td>@student.AdmissionStatus?.Name</td>
+                    <td>@student.LastUpdated.ToString("g")</td>
+                    <td>
+                    <form asp-action="UpdateStatus" asp-route-id="@student.StudentID" asp-route-status="Accepted" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                    </form>
+                    <form asp-action="UpdateStatus" asp-route-id="@student.StudentID" asp-route-status="Rejected" method="post" class="d-inline">
+                        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                    </form>
+                    </td>
+                </tr>
         }
     </tbody>
 </table>

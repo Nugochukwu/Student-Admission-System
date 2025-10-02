@@ -1,85 +1,103 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Student_Admission_System.Areas.Identity.Data;
 using Student_Admission_System.Models;
 
-namespace Student_Admission_System.Controllers
+[Authorize(Roles = "Admin")]
+public class AdminController : Controller
 {
-    [Authorize(Roles = "Admin")] // only admins can access
-	public class AdminController : Controller
-	{
-		private readonly ApplicationDbContext2 _context;
-		private readonly UserManager<IdentityUser> _userManager;
+    private readonly ApplicationDbContext2 _context;
+    private readonly UserManager<IdentityUser> _userManager;
 
-		public AdminController(ApplicationDbContext2 context, UserManager<IdentityUser> userManager)
-		{
-			_context = context;
-			_userManager = userManager;
-		}
+    public AdminController(ApplicationDbContext2 context, UserManager<IdentityUser> userManager)
+    {
+        _context = context;
+        _userManager = userManager;
+    }
 
-        // GET: Dashboard
-        public IActionResult Dashboard(string search, int? statusId)
+    // View all applications
+    public IActionResult Index()
+    {
+        return View();
+    }
+    public IActionResult AuditLogs()
+    {
+        var logs = _context.AuditLogs
+       .Include(l => l.Admin)   // eager load related Admin
+       .Include(l => l.Student) // eager load related Student
+       .OrderByDescending(l => l.Timestamp)
+       .ToList();
+        return View("Logs",logs);
+    }
+    public IActionResult Dashboard(string search, int? statusId)
+    {
+        var query = _context.Students
+            .Include(s => s.AdmissionStatus)
+            .AsQueryable();
+        //Filter
+        if(!string.IsNullOrEmpty(search))
         {
-            var students = _context.Students.AsQueryable();
-
-            if (!string.IsNullOrEmpty(search))
-            {
-                students = students.Where(s => s.FirstName.Contains(search) ||
-                                               s.LastName.Contains(search) ||
-                                               s.ApplicationNumber.Contains(search));
-            }
-
-            if (statusId.HasValue)
-            {
-                students = students.Where(s => s.AdmissionStatusID == statusId.Value);
-            }
-
-            ViewBag.Statuses = _context.AdmissionStatuses.ToList();
-            return View(students.ToList());
+            query = query.Where(s =>
+            s.FirstName.Contains(search) ||
+            s.LastName.Contains(search) ||
+            s.ApplicationNumber.Contains(search));
         }
 
+        // Status filter
+        if (statusId.HasValue)
+        {
+            query = query.Where(s => s.AdmissionStatusID == statusId.Value);
+        }
 
-        // GET: Edit Status
-        public IActionResult EditStatus(int id)
-		{
-			var student = _context.Students.Find(id);
-			if (student == null) return NotFound();
+        // Populate dropdown list
+        ViewBag.Statuses = _context.AdmissionStatuses.ToList();
 
-			ViewBag.Statuses = _context.AdmissionStatuses.ToList();
-			return View(student);
-		}
+        var students = query.ToList();
+        return View(students);
+    }
 
-		// POST: Update Status
-		[HttpPost]
-		[ValidateAntiForgeryToken]
-		public IActionResult EditStatus(int id, int newStatusId)
-		{
-			var student = _context.Students.Find(id);
-			if (student == null) return NotFound();
+   [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateStatus(int id, string status)
+    {
+        var student = _context.Students.FirstOrDefault(s => s.StudentID == id);
+        if (student == null)
+        {
+            return NotFound();
+        }
 
-			var oldStatus = student.AdmissionStatusID;
-			student.AdmissionStatusID = newStatusId;
-			student.LastUpdated = DateTime.Now;
+        // Map string status to AdmissionStatusID
+        var admissionStatus = _context.AdmissionStatuses
+            .FirstOrDefault(s => s.Name.ToUpper() == status.ToUpper());
+        if (admissionStatus == null)
+        {
+            return BadRequest("Invalid Status");
+        }
+        // Update student status
+        student.AdmissionStatusID = admissionStatus.AdmissionStatusID;
+        student.LastUpdated = DateTime.Now;
 
-			_context.SaveChanges();
 
-			// Log action
-			var adminId = _userManager.GetUserId(User);
-			var log = new AuditLog
-			{
-				StudentID = student.StudentID,
-				AdminID = adminId,
-				Action = "Changed Status",
-				OldStatus = _context.AdmissionStatuses.Find(oldStatus)?.Name,
-				NewStatus = _context.AdmissionStatuses.Find(newStatusId)?.Name,
-				Timestamp = DateTime.Now
-			};
 
-			_context.AuditLogs.Add(log);
-			_context.SaveChanges();
 
-			return RedirectToAction("Dashboard");
-		}
-	}
+        // Get logged-in admin
+        var adminUser = await _userManager.GetUserAsync(User);
+
+        var statusId = student.AdmissionStatusID;
+        var log = new AuditLog
+        {
+            Timestamp = DateTime.Now,
+            AdminID = adminUser.Id,
+            StudentID = student.StudentID,
+            Action = $"Changed status to {admissionStatus.Name}"
+        };
+        
+
+        _context.AuditLogs.Add(log);
+        _context.SaveChanges();
+
+        return RedirectToAction("Dashboard");
+    }
 }

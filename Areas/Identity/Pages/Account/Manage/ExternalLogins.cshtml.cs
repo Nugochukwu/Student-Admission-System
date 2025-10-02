@@ -89,6 +89,10 @@ namespace Student_Admission_System.Areas.Identity.Pages.Account.Manage
             var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
             if (!result.Succeeded)
             {
+                foreach (var error in result.Errors)
+                {
+                    Console.WriteLine(error.Description);
+                }
                 StatusMessage = "The external login was not removed.";
                 return RedirectToPage();
             }
