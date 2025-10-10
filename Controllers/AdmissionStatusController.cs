@@ -52,8 +52,7 @@ namespace Student_Admission_System.Controllers
         }
 
         // POST: AdmissionStatus/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("AdmissionStatusID,Name")] AdmissionStatus admissionStatus)
@@ -83,9 +82,8 @@ namespace Student_Admission_System.Controllers
             return View(admissionStatus);
         }
 
-        // POST: AdmissionStatus/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: AdmissionStatus/Edit/
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AdmissionStatusID,Name")] AdmissionStatus admissionStatus)
@@ -118,7 +116,7 @@ namespace Student_Admission_System.Controllers
             return View(admissionStatus);
         }
 
-        // GET: AdmissionStatus/Delete/5
+        // GET: AdmissionStatus/Delete/
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.AdmissionStatuses == null)
@@ -136,7 +134,7 @@ namespace Student_Admission_System.Controllers
             return View(admissionStatus);
         }
 
-        // POST: AdmissionStatus/Delete/5
+        // POST: AdmissionStatus/Delete/
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
